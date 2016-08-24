@@ -9,6 +9,7 @@ gpio.mode(VALVE_PIN, gpio.OUTPUT)
 enduser_setup.start(
    function()
      print('Connection WIFI')
+     connect_to_mqtt_broker()
    end, 
    function(err, str)
      print('ERROR:'..err)
@@ -44,7 +45,7 @@ function turn_on_valve()
 end
 
 function turn_off_valve()
-    og('Turn off valve')
+    log('Turn off valve')
     gpio.write(VALVE_PIN, gpio.LOW)
 end
 
