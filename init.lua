@@ -3,7 +3,7 @@ PORT = "12948"
 USER_NAME = "qegbzezg"
 PASSWORD = "GaD8XPkgNZMH"
 
-VALVE_PIN = 1
+VALVE_PIN = 4
 gpio.mode(VALVE_PIN, gpio.OUTPUT)
 
 enduser_setup.start(
