@@ -12,6 +12,7 @@ function on_volume(volume, callback, log)
     volume_in_ml = volume
     on_volume_callback = callback
     on_volume_log = log
+    gpio.trig(pin, 'both', onChange)
 end
 
 function onChange ()
@@ -26,11 +27,12 @@ function onChange ()
         gpio.write(green_pin, gpio.LOW)
         on_volume_callback()
         on_volume_log('finished pouring: ' .. count * 2.07)
+        gpio.trig(pin, 'none')
     end
 end
 
 gpio.mode(pin, gpio.INT, gpio.PULLUP)
-gpio.trig(pin, 'both', onChange)
+
 
 gpio.mode(red_pin, gpio.OUTPUT)
 gpio.write(red_pin, gpio.HIGH)

@@ -1,7 +1,5 @@
-HOST = "m10.cloudmqtt.com"
-PORT = "12948"
-USER_NAME = "qegbzezg"
-PASSWORD = "GaD8XPkgNZMH"
+HOST = "10.129.100.64"
+PORT = "1883"
 
 VALVE_PIN = 4
 gpio.mode(VALVE_PIN, gpio.OUTPUT)
@@ -50,7 +48,7 @@ function turn_off_valve()
 end
 
 function connect_to_mqtt_broker()
-    client = mqtt.Client(node.chipid(), 30000, USER_NAME, PASSWORD)
+    client = mqtt.Client(node.chipid(),30000,'','', 1)
     client:connect(HOST, PORT, 0, on_connect)
     client:on('offline', on_disconnect)
     client:on('message', on_message)
