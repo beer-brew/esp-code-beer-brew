@@ -1,16 +1,23 @@
 Logger = {
 }
 
-function Logger:new (o, process_name)
+function Logger:new (o, source_config)
   o = o or {}
   setmetatable(o, self)
   self.__index = self
-  self.process_name = process_name
+  self.source = source_config or {}
+  self.source.chip_id = node.chipid()
   return o
 end
 
 function Logger:_log(priority, msg)
-  print("process: '" .. self.process_name .. "' priority: '" .. priority .. "' msg: '" .. msg .. "'")
+  event = {
+    source = self.source,
+    priority = priority,
+    message = msg
+  }
+  print(cjson.encode(event))
+  -- mqtt(event)
 end
 
 function Logger:debug(msg)
@@ -38,7 +45,7 @@ function Logger:emerg(msg)
 end
 
 Module = {
-  log = Logger:new()
+  log = Logger:new(nil, { process = "test-module" } )
 }
 
 function Module:new (o, name)
@@ -61,10 +68,12 @@ end
 
 Trigger = {}
 
+-- filter: function that returns a boolean. true to exec callback
 function Trigger:onMessage( filter, callback )
 
 end
 
+-- can schedule be a cron type string? exec callback when match
 function Trigger:onSchedule( schedule, callback )
 
 end
