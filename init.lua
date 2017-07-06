@@ -7,7 +7,6 @@ PASSWORD = "GaD8XPkgNZMH"
 VALVE_PIN = 4
 gpio.mode(VALVE_PIN, gpio.OUTPUT)
 
-turn_off_valve()
 
 enduser_setup.start(
    function()
@@ -29,14 +28,6 @@ function on_connect()
   client:subscribe( '/givemebeer/'..node.chipid(), 0)
 end
 
-function on_message(conn, topic, data)
-   if topic=='/givemebeer/' .. node.chipid() then
-     local data_json=cjson.decode(data)
-     log(topic .. '#:' .. data_json['volume']) 
-     on_volume(data_json['volume'], turn_off_valve, log)       
-     turn_on_valve()  
-   end 
-end
 
 function on_disconnect()
     log('Disconnected from MQTT server')
@@ -47,10 +38,23 @@ function turn_on_valve()
     gpio.write(VALVE_PIN, gpio.HIGH)
 end
 
+
+
 function turn_off_valve()
     log('Turn off valve')
     gpio.write(VALVE_PIN, gpio.LOW)
 end
+
+
+function on_message(conn, topic, data)
+   if topic=='/givemebeer/' .. node.chipid() then
+     local data_json=cjson.decode(data)
+     log(topic .. '#:' .. data_json['volume']) 
+     on_volume(data_json['volume'], turn_off_valve, log)       
+     turn_on_valve()  
+   end 
+end
+
 
 function connect_to_mqtt_broker()
     client = mqtt.Client(node.chipid(),30000,USER_NAME,PASSWORD, 1)
@@ -58,3 +62,6 @@ function connect_to_mqtt_broker()
     client:on('offline', on_disconnect)
     client:on('message', on_message)
 end
+
+
+turn_off_valve()
